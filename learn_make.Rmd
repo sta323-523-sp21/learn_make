@@ -1,0 +1,51 @@
+---
+title: "Learn make"
+author: ""
+date: ""
+output: 
+  html_document:
+    css: learn_make.css
+    toc: true
+    number_sections: false
+    toc_float: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE,
+                      message = FALSE, warning = FALSE, comment = NA,
+                      fig.width = 9, fig.height = 6)
+```
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(sf)
+```
+
+## Load data
+
+```{r load_data}
+sheetz <- read_rds("data/sheetz.rds")
+pa_counties <- st_read("data/COUNTY_BOUNDARY.shp", quiet = T)
+pa_state_roads <- st_read("data/RMSSEG_(State_Roads).shp", quiet = T)
+```
+
+## Visualize data
+
+```{r sheetz_as_sf}
+sheetz <- sheetz %>% 
+  st_as_sf(coords = c("longitude", "latitude"), crs = st_crs(pa_counties))
+```
+
+```{r figure_1}
+pa_counties %>% 
+  ggplot() +
+  geom_sf(alpha = 0) +
+  geom_sf(data = pa_state_roads, alpha = 0.5, color = "lightblue") +
+  geom_sf(data = sheetz, color = "red") +
+  theme_void()
+```
+
+
